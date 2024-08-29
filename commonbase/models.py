@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-
+from .fields import *
 
 class TimeStampeModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         max_length=125,
         unique=True,
@@ -39,6 +39,7 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -93,6 +94,8 @@ class Review(TimeStampeModel):
         Employee, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=RATING_CHOICES)
     comment = models.TextField()
+    token = EncryptedField(null= True,blank=True)
+
 
     def __str__(self):
-        return f"Review {self.id}  - employee:{self.employee.name}"
+        return f"Review {self.id}  "

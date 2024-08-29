@@ -1,3 +1,5 @@
 __pycache__/
 *.py[cod]
 *$py.class
+public_key.pub
+private_key.pem
